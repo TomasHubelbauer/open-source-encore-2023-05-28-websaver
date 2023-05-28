@@ -57,11 +57,15 @@ And that's what I did:
 This PR took a while to crack and in the process I learned a few things:
 
 - The build directory is in `/Users/$user/Library/Developer/Xcode/DerivedData`
+
 - The directory itself is named after the project/schema and some GUID
+
 - The GUID appears to be stable across build with no changes but I don't know
   if it is stable across changes to the codebase XCode sees (ObjectiveC/Swift)
+
 - It is not trivial to make `zip` bundle a directory which is not in the current
   working directory such that the paths are relative in a nice way
+
 - GitHub Releases need to be tied to a tag and there is no maintained official
   GitHub Action for cutting releases and the 3rd party ones do not seem to allow
   you to have them create a one-off tag without you needing to worry about it
@@ -69,6 +73,9 @@ This PR took a while to crack and in the process I learned a few things:
   I ended up adding a few lines of Bash to create a tag based on the current
   date and time and tagging the repository before creating the Release that
   would be associated to the tag.
+  
+  The <https://github.com/rickstaa/action-create-tag> Action could not be used
+  because it doesn't run on macOS.
 
 I also learnt some WebSaver-specific things.
 The app/screen saver is built for Intel processors and it is not a Universal
@@ -103,6 +110,7 @@ There is a few things I want to get into in case my PRs do get merged:
   Also I am aware of a trick where you can right-click the downloaded package
   and select Open (instead of double-clicking it) and that should clear the
   quarantine bit as well, but again, in this case I have not found that to work.
+
 - Update the XCode project to built a Universal binary or maybe add a new schema
   (or whatever mechanism there is in XCode for build configuration) and have two
   targets - Intel and Apple - and built both in the CI
@@ -110,11 +118,20 @@ There is a few things I want to get into in case my PRs do get merged:
   The screen saver is tiny either way so the Universal binary would probably be
   just fine.
   
+  <https://developer.apple.com/documentation/apple-silicon/building-a-universal-macos-binary>
+  
 - Add support for displaying local `file:` protocol files.
  
   This is important to be and it doesn't work out of the box.
   I've already tried a few things to make it work but to no avail.
   See <https://github.com/brockgr/websaver/issues/25>
+  
+- Notarize the application to get rid of the security warning
+
+  <https://developer.apple.com/documentation/security/notarizing_macos_software_before_distribution>
+  
+  This will probably always remain a pipe dream as I have no experience with
+  this but it would be very cool to achieve!
   
 I am hoping my contributions to the project do get accepted and I make it nicer
 to download and get the screen saver to run for everyone.
